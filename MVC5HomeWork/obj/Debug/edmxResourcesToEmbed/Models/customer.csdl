@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="customerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="CustomerBankInfo">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="客戶Id" Type="Int32" Nullable="false" />
+    <Property Name="銀行名稱" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="銀行代碼" Type="Int32" Nullable="false" />
+    <Property Name="分行代碼" Type="Int32" />
+    <Property Name="帳戶名稱" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="帳戶號碼" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="CustomerData" Relationship="Self.FK_客戶銀行資訊_客戶資料" FromRole="CustomerBankInfo" ToRole="CustomerData" />
+  </EntityType>
+  <EntityType Name="CustomerContact">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="客戶Id" Type="Int32" Nullable="false" />
+    <Property Name="職稱" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="姓名" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Email" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="手機" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="電話" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="CustomerData" Relationship="Self.FK_客戶聯絡人_客戶資料" FromRole="CustomerContact" ToRole="CustomerData" />
+  </EntityType>
+  <EntityType Name="CustomerData">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="客戶名稱" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="統一編號" Type="String" MaxLength="8" FixedLength="true" Unicode="false" Nullable="false" />
+    <Property Name="電話" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="傳真" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="地址" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="CustomerBankInfo" Relationship="Self.FK_客戶銀行資訊_客戶資料" FromRole="CustomerData" ToRole="CustomerBankInfo" />
+    <NavigationProperty Name="CustomerContact" Relationship="Self.FK_客戶聯絡人_客戶資料" FromRole="CustomerData" ToRole="CustomerContact" />
+    <NavigationProperty Name="CustomerInfo" Relationship="Self.FK_CustomerInfo_CustomerData" FromRole="CustomerData" ToRole="CustomerInfo" />
+    <Property Name="是否已刪除" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="CustomerInfo">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="客戶名稱" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="聯絡人數量" Type="Int32" Nullable="false" />
+    <Property Name="銀行帳戶數量" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="CustomerData" Relationship="Self.FK_CustomerInfo_CustomerData" FromRole="CustomerInfo" ToRole="CustomerData" />
+    <NavigationProperty Name="CustomerInfo1" Relationship="customerModel.FK_CustomerInfo_CustomerInfo" FromRole="CustomerInfo" ToRole="CustomerInfo1" />
+    <NavigationProperty Name="CustomerInfo2" Relationship="customerModel.FK_CustomerInfo_CustomerInfo" FromRole="CustomerInfo1" ToRole="CustomerInfo" />
+  </EntityType>
+  <Association Name="FK_客戶銀行資訊_客戶資料">
+    <End Role="CustomerData" Type="Self.CustomerData" Multiplicity="1" />
+    <End Role="CustomerBankInfo" Type="Self.CustomerBankInfo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CustomerData">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CustomerBankInfo">
+        <PropertyRef Name="客戶Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_客戶聯絡人_客戶資料">
+    <End Role="CustomerData" Type="Self.CustomerData" Multiplicity="1" />
+    <End Role="CustomerContact" Type="Self.CustomerContact" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CustomerData">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CustomerContact">
+        <PropertyRef Name="客戶Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CustomerInfo_CustomerData">
+    <End Role="CustomerData" Type="Self.CustomerData" Multiplicity="1" />
+    <End Role="CustomerInfo" Type="Self.CustomerInfo" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="CustomerData">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CustomerInfo">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="customerEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="CustomerBankInfo" EntityType="Self.CustomerBankInfo" />
+    <EntitySet Name="CustomerContact" EntityType="Self.CustomerContact" />
+    <EntitySet Name="CustomerData" EntityType="Self.CustomerData" />
+    <EntitySet Name="CustomerInfo" EntityType="Self.CustomerInfo" />
+    <AssociationSet Name="FK_客戶銀行資訊_客戶資料" Association="Self.FK_客戶銀行資訊_客戶資料">
+      <End Role="CustomerData" EntitySet="CustomerData" />
+      <End Role="CustomerBankInfo" EntitySet="CustomerBankInfo" />
+    </AssociationSet>
+    <AssociationSet Name="FK_客戶聯絡人_客戶資料" Association="Self.FK_客戶聯絡人_客戶資料">
+      <End Role="CustomerData" EntitySet="CustomerData" />
+      <End Role="CustomerContact" EntitySet="CustomerContact" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CustomerInfo_CustomerData" Association="Self.FK_CustomerInfo_CustomerData">
+      <End Role="CustomerData" EntitySet="CustomerData" />
+      <End Role="CustomerInfo" EntitySet="CustomerInfo" />
+    </AssociationSet>
+    <FunctionImport Name="sp_alterdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_creatediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_dropdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(customerModel.sp_helpdiagramdefinition_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(customerModel.sp_helpdiagrams_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_renamediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="new_diagramname" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_upgraddiagrams" />
+    <EntitySet Name="sysdiagrams" EntityType="customerModel.sysdiagrams" />
+    <AssociationSet Name="FK_CustomerInfo_CustomerInfo" Association="customerModel.FK_CustomerInfo_CustomerInfo">
+      <End Role="CustomerInfo" EntitySet="CustomerInfo" />
+      <End Role="CustomerInfo1" EntitySet="CustomerInfo" />
+    </AssociationSet>
+  </EntityContainer>
+  <ComplexType Name="sp_helpdiagramdefinition_Result">
+    <Property Type="Int32" Name="version" Nullable="true" />
+    <Property Type="Binary" Name="definition" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_helpdiagrams_Result">
+    <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+    <Property Type="Int32" Name="OwnerID" Nullable="false" />
+  </ComplexType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <Association Name="FK_CustomerInfo_CustomerInfo">
+    <End Type="customerModel.CustomerInfo" Role="CustomerInfo" Multiplicity="1" />
+    <End Type="customerModel.CustomerInfo" Role="CustomerInfo1" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="CustomerInfo">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CustomerInfo1">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

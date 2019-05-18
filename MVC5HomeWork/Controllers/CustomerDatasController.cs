@@ -1,0 +1,141 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
+using System.Linq;
+using System.Net;
+using System.Web;
+using System.Web.Mvc;
+using MVC5HomeWork.Models;
+
+namespace MVC5HomeWork.Controllers
+{
+    public class CustomerDatasController : Controller
+    {
+        private customerEntities db = new customerEntities();
+
+        public ActionResult CustomerInfo()
+        {
+            return View(db.CustomerInfo.ToList());
+        }
+
+        // GET: CustomerDatas
+        public ActionResult Index(string keyword)
+        {
+            var data = db.CustomerData.Where(p => false == p.是否已刪除).AsQueryable();
+            
+            if (!String.IsNullOrEmpty(keyword))
+            {
+                data = data.Where(p => p.客戶名稱.Contains(keyword));
+            }
+
+            return View(data.ToList());
+        }
+
+        // GET: CustomerDatas/Details/5
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            CustomerData customerData = db.CustomerData.Find(id);
+            if (customerData == null)
+            {
+                return HttpNotFound();
+            }
+            return View(customerData);
+        }
+
+        // GET: CustomerDatas/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: CustomerDatas/Create
+        // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
+        // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email")] CustomerData customerData)
+        {
+            if (ModelState.IsValid)
+            {
+                db.CustomerData.Add(customerData);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View(customerData);
+        }
+
+        // GET: CustomerDatas/Edit/5
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            CustomerData customerData = db.CustomerData.Find(id);
+            if (customerData == null)
+            {
+                return HttpNotFound();
+            }
+            return View(customerData);
+        }
+
+        // POST: CustomerDatas/Edit/5
+        // 若要免於過量張貼攻擊，請啟用想要繫結的特定屬性，如需
+        // 詳細資訊，請參閱 https://go.microsoft.com/fwlink/?LinkId=317598。
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email")] CustomerData customerData)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(customerData).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(customerData);
+        }
+
+        // GET: CustomerDatas/Delete/5
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            CustomerData customerData = db.CustomerData.Find(id);
+            if (customerData == null)
+            {
+                return HttpNotFound();
+            }
+            return View(customerData);
+        }
+
+        // POST: CustomerDatas/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            CustomerData customerData = db.CustomerData.Find(id);
+            //db.CustomerData.Remove(customerData);
+            //CustomerData
+            customerData.是否已刪除 = true;
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+    }
+}

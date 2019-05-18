@@ -81,3 +81,8 @@ D:\TEMP\MVC5HomeWork\MVC5HomeWork\obj\Debug\MVC5HomeWork.csproj.CoreCompileInput
 D:\TEMP\MVC5HomeWork\MVC5HomeWork\obj\Debug\MVC5HomeWork.csproj.CopyComplete
 D:\TEMP\MVC5HomeWork\MVC5HomeWork\obj\Debug\MVC5HomeWork.dll
 D:\TEMP\MVC5HomeWork\MVC5HomeWork\obj\Debug\MVC5HomeWork.pdb
+D:\TEMP\MVC5HomeWork\MVC5HomeWork\bin\EntityFramework.dll
+D:\TEMP\MVC5HomeWork\MVC5HomeWork\bin\EntityFramework.SqlServer.dll
+D:\TEMP\MVC5HomeWork\MVC5HomeWork\bin\EntityFramework.xml
+D:\TEMP\MVC5HomeWork\MVC5HomeWork\bin\EntityFramework.SqlServer.xml
+D:\TEMP\MVC5HomeWork\MVC5HomeWork\bin\zh-Hant\EntityFramework.resources.dll
